@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  postgres:
+    container_name: prod_postgres
+    image: postgres:9.6
+    ports:
+      - "${DB_PORT}:5432"
+    environment:
+      - POSTGRES_DB=token_terminal_prod
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
