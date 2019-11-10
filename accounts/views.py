@@ -24,7 +24,7 @@ class UserViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin, GenericVie
             url_path='info', permission_classes=[permissions.IsAuthenticated])
     def info(self, request):
         """
-        User info
+        Current user info
         """
         serializer = self.serializer_class(self.request.user)
         return Response(serializer.data)
