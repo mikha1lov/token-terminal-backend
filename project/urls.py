@@ -19,11 +19,11 @@ from django.contrib import admin
 from rest_framework import routers
 from rest_framework_swagger.views import get_swagger_view
 
-from accounts.views import AuthViewSet
+from accounts.views import UserViewSet
 
 schema_view = get_swagger_view(title='Token Terminal API')
 router = routers.DefaultRouter(trailing_slash=True)
-router.register(r'auth', AuthViewSet, base_name='auth')
+router.register(r'user', UserViewSet, base_name='user')
 
 urlpatterns = [
     url(r'^v1/', include(router.urls)),
