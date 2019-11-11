@@ -1,8 +1,8 @@
-from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 
-from accounts.utils import signed_data, verify_signature, verify_address
+from accounts.models import User
+from accounts.utils import signed_data, verify_address, verify_signature
 
 
 class UserSerializer(serializers.ModelSerializer):
