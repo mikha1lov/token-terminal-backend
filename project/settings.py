@@ -39,6 +39,7 @@ INSTALLED_APPS = [
 
     'django_extensions',
 
+    'corsheaders',
     'rest_framework',
     'rest_framework_swagger',
     'rest_framework.authtoken',
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -132,6 +134,10 @@ STATICFILES_DIRS = [
 ]
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+# Allow all origin only in debug mode
+CORS_ORIGIN_ALLOW_ALL = DEBUG
+
 
 # REST_FRAMEWORK
 REST_FRAMEWORK = {
