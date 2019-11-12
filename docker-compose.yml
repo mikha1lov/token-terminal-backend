@@ -1,11 +1,26 @@
 version: '3'
 
 services:
+  backend:
+    build: .
+    volumes:
+      - ..:/usr/src/app/token-terminal-backend
+    depends_on:
+      - postgres
+    ports:
+      - "8000:8000"
+    environment:
+      DB_NAME: token_terminal_prod
+      DB_USERNAME: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+    command: python manage.py runserver 0.0.0.0:8000
+
   postgres:
     container_name: prod_postgres
     image: postgres:9.6
     ports:
-      - "${DB_PORT}:5432"
+      - "5432:5432"
     environment:
       - POSTGRES_DB=token_terminal_prod
     volumes:
