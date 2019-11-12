@@ -20,10 +20,12 @@ from rest_framework import routers
 from rest_framework_swagger.views import get_swagger_view
 
 from accounts.views import UserViewSet
+from poll.views import QuestionViewSet
 
 schema_view = get_swagger_view(title='Token Terminal API')
 router = routers.DefaultRouter(trailing_slash=True)
 router.register(r'user', UserViewSet, base_name='user')
+router.register(r'question', QuestionViewSet, base_name='question')
 
 urlpatterns = [
     url(r'^v1/', include(router.urls)),
