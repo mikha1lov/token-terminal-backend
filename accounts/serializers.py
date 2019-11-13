@@ -1,15 +1,29 @@
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 
-from accounts.models import User
+from accounts.models import User, Profile
 from accounts.utils import signed_data, verify_address, verify_signature
 
 
 class UserSerializer(serializers.ModelSerializer):
+    avatar = serializers.ImageField()
+    meeting_frequency = serializers.ChoiceField(source='profile.meeting_frequency',
+                                                choices=Profile.MEETING_FREQUENCY_CHOICE)
+    meeting_type = serializers.ChoiceField(source='profile.meeting_type',
+                                           choices=Profile.MEETING_TYPE_CHOICE)
+
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'username')
+        fields = ('id', 'email', 'first_name', 'last_name', 'username', 'avatar', 'meeting_frequency', 'meeting_type')
         read_only_fields = ('id', 'username')
+
+    def update(self, instance, validated_data):
+        profile = instance.profile
+        profile_data = validated_data.pop('profile', {})
+        for key, value in profile_data.items():
+            setattr(profile, key, value)
+        profile.save()
+        return super(UserSerializer, self).update(instance, validated_data)
 
 
 class SuccessAuthSerializer(serializers.ModelSerializer):

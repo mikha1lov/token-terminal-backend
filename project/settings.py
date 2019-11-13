@@ -136,9 +136,14 @@ STATICFILES_DIRS = [
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
+# Media files
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Allow all origin only in debug mode
 CORS_ORIGIN_ALLOW_ALL = DEBUG
-
 
 # REST_FRAMEWORK
 REST_FRAMEWORK = {
