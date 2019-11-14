@@ -18,7 +18,12 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'username')
 
     def update(self, instance, validated_data):
-        profile = instance.profile
+        try:
+            profile = instance.profile
+        except Profile.DoesNotExist:
+            Profile.objects.create(user=instance)
+            profile = instance.profile
+
         profile_data = validated_data.pop('profile', {})
         for key, value in profile_data.items():
             setattr(profile, key, value)
