@@ -20,7 +20,7 @@ services:
     container_name: prod_postgres
     image: postgres:9.6
     ports:
-      - "5432:5432"
+      - "15432:5432"
     environment:
       - POSTGRES_DB=token_terminal_prod
     volumes:

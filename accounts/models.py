@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from project.constants import PLACE_TYPE_CHOICE
+
 
 class User(AbstractUser):
     avatar = models.ImageField(blank=True, null=True)
@@ -17,18 +19,9 @@ class Profile(models.Model):
         (EVERY_MONTH, 'Every month'),
     )
 
-    BAR = 'bar'
-    COFFEE = 'coffee'
-    LUNCH = 'lunch'
-
-    MEETING_TYPE_CHOICE = (
-        (BAR, 'bar'),
-        (COFFEE, 'coffee'),
-        (LUNCH, 'lunch'),
-    )
     user = models.OneToOneField(User, related_name='profile', on_delete=models.deletion.CASCADE)
     meeting_frequency = models.CharField(max_length=255, choices=MEETING_FREQUENCY_CHOICE, null=True, blank=True)
-    meeting_type = models.CharField(max_length=255, choices=MEETING_TYPE_CHOICE, null=True, blank=True)
+    meeting_type = models.CharField(max_length=255, choices=PLACE_TYPE_CHOICE, null=True, blank=True)
 
 
 @receiver(post_save, sender=User)

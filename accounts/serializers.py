@@ -3,6 +3,15 @@ from rest_framework.authtoken.models import Token
 
 from accounts.models import User, Profile
 from accounts.utils import signed_data, verify_address, verify_signature
+from project.constants import PLACE_TYPE_CHOICE
+
+
+class PublicUserSerializer(serializers.ModelSerializer):
+    avatar = serializers.ImageField()
+
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'avatar')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -10,7 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
     meeting_frequency = serializers.ChoiceField(source='profile.meeting_frequency',
                                                 choices=Profile.MEETING_FREQUENCY_CHOICE)
     meeting_type = serializers.ChoiceField(source='profile.meeting_type',
-                                           choices=Profile.MEETING_TYPE_CHOICE)
+                                           choices=PLACE_TYPE_CHOICE)
 
     class Meta:
         model = User

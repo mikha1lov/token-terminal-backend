@@ -23,15 +23,16 @@ from rest_framework_swagger.views import get_swagger_view
 
 from accounts.views import UserViewSet
 from poll.views import QuestionViewSet
+from meeting.views import MeetingViewSet
 
 schema_view = get_swagger_view(title='Token Terminal API')
 router = routers.DefaultRouter(trailing_slash=True)
 router.register(r'user', UserViewSet, base_name='user')
 router.register(r'question', QuestionViewSet, base_name='question')
+router.register(r'meeting', MeetingViewSet, base_name='meeting')
 
 urlpatterns = [
-    url(r'^v1/', include(router.urls)),
-    url(r'^doc/$', schema_view),
-    url(r'^admin/', admin.site.urls),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
+                  url(r'^v1/', include(router.urls)),
+                  url(r'^doc/$', schema_view),
+                  url(r'^admin/', admin.site.urls),
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
