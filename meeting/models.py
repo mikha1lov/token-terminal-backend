@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import m2m_changed
+from django.db.models.signals import m2m_changed, post_save
 from django.dispatch import receiver
 
 from project.constants import PLACE_TYPE_CHOICE
@@ -43,3 +43,9 @@ def create_meeting_status(sender, instance, action, **kwargs):
     if action == 'post_add':
         for user in instance.users.all():
             MeetingStatus.objects.get_or_create(meeting=instance, user=user)
+
+
+@receiver(post_save, sender=MeetingStatus)
+def update_meeting_statuses(sender, instance, created, **kwargs):
+    if instance.status == MeetingStatus.DECLINED:
+        MeetingStatus.objects.filter(meeting=instance.meeting).update(status=MeetingStatus.DECLINED)

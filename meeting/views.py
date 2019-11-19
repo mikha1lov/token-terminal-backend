@@ -19,6 +19,17 @@ class MeetingViewSet(mixins.ListModelMixin, GenericViewSet):
             statuses__status=MeetingStatus.DECLINED
         )
 
+    def list(self, request, *args, **kwargs):
+        data = {}
+        user = request.user
+        accepted_meetings = self.get_queryset().filter(statuses__user=user, statuses__status=MeetingStatus.ACCEPTED).distinct()
+        declined_meetings = self.get_queryset().filter(statuses__user=user, statuses__status=MeetingStatus.DECLINED).distinct()
+        new_meetings = self.get_queryset().filter(statuses__user=user, statuses__status=None).distinct()
+        data['accepted'] = MeetingSerializer(accepted_meetings, many=True, context={'request': request}).data
+        data['declined'] = MeetingSerializer(declined_meetings, many=True, context={'request': request}).data
+        data['new'] = MeetingSerializer(new_meetings, many=True, context={'request': request}).data
+        return Response(data=data)
+
     @action(methods=['post', ], detail=True, serializer_class=serializers.Serializer,
             url_path='accept', permission_classes=[permissions.IsAuthenticated])
     def accept_meeting(self, request, **kwargs):
