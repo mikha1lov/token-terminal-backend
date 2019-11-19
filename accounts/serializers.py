@@ -20,10 +20,12 @@ class UserSerializer(serializers.ModelSerializer):
                                                 choices=Profile.MEETING_FREQUENCY_CHOICE)
     meeting_type = serializers.ChoiceField(source='profile.meeting_type',
                                            choices=PLACE_TYPE_CHOICE)
+    is_active = serializers.BooleanField(source='profile.is_active')
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'username', 'avatar', 'meeting_frequency', 'meeting_type')
+        fields = ('id', 'email', 'first_name', 'last_name', 'username', 'avatar',
+                  'meeting_frequency', 'meeting_type', 'is_active')
         read_only_fields = ('id', 'username')
 
     def update(self, instance, validated_data):
