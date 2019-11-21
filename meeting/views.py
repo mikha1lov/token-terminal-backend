@@ -1,3 +1,7 @@
+from datetime import datetime
+
+from django.db.models import Q
+
 from rest_framework import permissions, mixins, status, serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -15,18 +19,18 @@ class MeetingViewSet(mixins.ListModelMixin, GenericViewSet):
 
     def get_queryset(self):
         return self.queryset.filter(
-            users=self.request.user).exclude(
-            statuses__status=MeetingStatus.DECLINED
-        )
+            users=self.request.user)
 
     def list(self, request, *args, **kwargs):
         data = {}
+        now = datetime.now()
         user = request.user
-        accepted_meetings = self.get_queryset().filter(statuses__user=user, statuses__status=MeetingStatus.ACCEPTED).distinct()
-        declined_meetings = self.get_queryset().filter(statuses__user=user, statuses__status=MeetingStatus.DECLINED).distinct()
-        new_meetings = self.get_queryset().filter(statuses__user=user, statuses__status=None).distinct()
+        accepted_meetings = self.get_queryset().filter(statuses__user=user, statuses__status=MeetingStatus.ACCEPTED, datetime__gt=now)
+        inactive_meetings = self.get_queryset().filter(Q(statuses__user=user, statuses__status=MeetingStatus.DECLINED)
+                                                       | Q(statuses__user=user, datetime__lte=datetime.now().date())).distinct()
+        new_meetings = self.get_queryset().filter(statuses__user=user, statuses__status=None, datetime__gt=now).distinct()
         data['accepted'] = MeetingSerializer(accepted_meetings, many=True, context={'request': request}).data
-        data['declined'] = MeetingSerializer(declined_meetings, many=True, context={'request': request}).data
+        data['inactive'] = MeetingSerializer(inactive_meetings, many=True, context={'request': request}).data
         data['new'] = MeetingSerializer(new_meetings, many=True, context={'request': request}).data
         return Response(data=data)
 
